@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ user.username }}'s Profile | BrainMatch</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0D0628] text-white font-mono min-h-screen p-6">
+
+  <div class="w-full">
+    <header class="flex justify-between items-center mb-8">
+      <h1 class="text-2xl font-bold text-purple-400 tracking-wide">🧠 brainmatch/</h1>
+      <a href="{% url 'user_settings' %}" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded font-semibold transition">
+        Settings ⚙️
+      </a>
+    </header>
+
+    <main class="space-y-6 flex items-start gap-4">
+      <!-- USERNAME -->
+      <div class="bg-[#130D36]  m-5 p-6 rounded-lg shadow-lg shrink-0 min-w-3xl">
+        <h2 class="text-green-400  text-sm tracking-widest">> user.username</h2>
+        <p class="bg-[#0D0628] rounded-xl p-4 text-3xl font-bold text-white m-2">{{ user.username }}</p>
+      <!-- LEVEL -->
+        <h2 class="text-green-400 text-sm tracking-widest">> user.level</h2>
+        <p class="bg-[#0D0628] rounded-xl p-4 text-purple-300 m-2 text-xl ">{{ user.get_level_display|default:"Not set" }}</p>
+      <!-- BIO -->
+        <h2 class="text-green-400 text-sm tracking-widest">> user.bio</h2>
+        <pre class="bg-[#0D0628] rounded-xl p-4 whitespace-pre-wrap text-white text-base">{{ user.bio|default:"No biography yet." }}</pre>
+      <!-- SKILLS -->
+      
+        <h2 class="text-green-400 text-sm tracking-widest">> user.skills</h2>
+        <div class="m-2 flex flex-wrap gap-2">
+          {% for skill in user.skills.all %}
+            <span class="bg-purple-500/80 text-white mt-4 mb-4 px-3 py-1 rounded-full text-sm hover:bg-purple-400 transition">
+              {{ skill.name }}
+            </span>
+          {% empty %}
+            <p class="text-gray-400 text-sm">No skills added yet.</p>
+          {% endfor %}
+        </div>
+      <!-- LINKS -->
+        <h2 class="text-green-400 text-sm tracking-widest">> user.links</h2>
+        <ul class="m-2 space-y-2 text-sm">
+          {% if user.github %}
+            <li><a href="{{ user.github }}" target="_blank" class="text-blue-400 hover:underline"> GitHub</a></li>
+          {% endif %}
+          {% if user.linkedin %}
+            <li><a href="{{ user.linkedin }}" target="_blank" class="text-blue-400 hover:underline">LinkedIn</a></li>
+          {% endif %}
+          {% if user.twitter %}
+            <li><a href="{{ user.twitter }}" target="_blank" class="text-blue-400 hover:underline">Twitter</a></li>
+          {% endif %}
+          {% if user.discord %}
+            <li><span class="text-white">Discord: {{ user.discord }}</span></li>
+          {% endif %}
+          {% if not user.github and not user.linkedin and not user.twitter and not user.discord %}
+            <li class="text-gray-400">No links added yet.</li>
+          {% endif %}
+        </ul>
+      </div>
+
+        
+
+      <!--IDEAS-->
+      <div class="bg-[#130D36]  m-5 p-6 rounded-lg shadow-lg flex-grow w-80">
+      <section>
+        <h3 class="text-xl font-semibold mb-4">Ideas <a href="{% url 'create_idea' %}" class="text-purple-400 underline">Create a new idea</a></h3>
+        <ul class="space-y-3">
+            {% for idea in user.ideas.all|slice:":5" %}
+            <li class="bg-[#130D36] p-4 rounded flex justify-between items-center">
+                <a href="{% url 'idea_detail' idea.id %}" class="text-purple-400 hover:underline font-semibold">{{ idea.title }}</a>
+                <div class="flex gap-2 items-center">
+                <span class="text-sm text-green-400">{{ idea.get_status_display }}</span>
+                <form method="post" action="{% url 'idea_delete' idea.id %}" onsubmit="return confirm('Delete this idea?');">
+                    {% csrf_token %}
+                    <button type="submit" class="text-red-500 hover:text-red-700 font-bold ml-4">🗑️</button>
+                </form>
+                </div>
+            </li>
+            {% empty %}
+            <li class="text-gray-500">No ideas created yet.</li>
+            <a href="{% url 'create_idea' %}" class="text-blue-400 underline">Create a new project</a>
+            {% endfor %}
+        </ul>
+        </section>
+        <!--PROJECTS-->
+        <section>
+            <h3 class="text-xl font-semibold mb-4">Projects <a href="{% url 'create_project' %}" class="text-purple-400 underline">Subir nuevo proyecto</a></h3>
+            <ul class="space-y-3">
+                {% for project in projects %}
+                    <li class="bg-[#130D36] p-4 rounded flex justify-between items-center">
+                    <a href="{% url 'project_detail' project.id %}" class="text-purple-400 hover:underline font-semibold">{{ project.title }}</a>
+                    <div class="flex gap-2 items-center">
+                        <span class="text-sm text-green-400">{{ project.get_availability_display }}</span>
+                    </div>
+                    <form method="post" action="{% url 'project_delete' project.id %}" onsubmit="return confirm('¿Borrar este proyecto?');">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-500 hover:text-red-700 font-bold ml-4">🗑️</button>
+                    </form>
+
+                    </li>
+                {% empty %}
+                    <li class="text-gray-500">No projects created yet. Create one: <a href="{% url 'create_project' %}" class="text-blue-400 underline">Subir nuevo proyecto</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+        </div>
+
+        <!--AMIGOS-->
+      <div class="bg-[#130D36]  p-6 rounded-lg shadow-lg flex-grow">
+        <h3>Friends</h3>
+        {% if request.user != user %}
+        {% if user in request.user.friends.all %}
+            <!-- Botón para dejar de seguir -->
+            <form method="post" action="{% url 'unfollow_user' user.username %}">
+            {% csrf_token %}
+            <button class="bg-red-500 px-4 py-2 rounded">❌ Dejar de seguir</button>
+            </form>
+        {% else %}
+            <!-- Botón para seguir -->
+            <form method="post" action="{% url 'follow_user' user.username %}">
+            {% csrf_token %}
+            <button class="bg-green-500 px-4 py-2 rounded">➕ Seguir</button>
+            </form>
+        {% endif %}
+        {% endif %}
+        <a href="{% url 'user_friends' user.username %}" class="bg-green-500/80 text-white px-3 py-1 rounded-full text-sm hover:bg-purple-400 transition">
+            My contacts
+        </a>
+      </div>
+      </div>
+
+
+      <!-- EXIT --> 
+      <div class="flex justify-center">
+        <a href="{% url 'home' %}" class="text-sm text-purple-400 hover:underline">
+        ← Back to home
+        </a>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>
