@@ -21,7 +21,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('mindmatch-76oz.onrender.com/', include('users.urls')),
-    path('mindmatch-76oz.onrender.com/', include('projects.urls')),
-    path('mindmatch-76oz.onrender.com/', include('ideas.urls')),
+    path('', include('users.urls')),
+    path('', include('projects.urls')),
+    path('', include('ideas.urls')),
 ]
