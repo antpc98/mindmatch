@@ -20,8 +20,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', user_views.home, name='home'),  # 👈 Asegúrate de tener esto
-    path('users/', include('users.urls')),
+    path('', lambda request: redirect('home'), name='root'),  # 👈 Redirige desde "/" a "/home/"
+    path('', include('users.urls')),
     path('projects/', include('projects.urls')),
     path('ideas/', include('ideas.urls')),
 ]
