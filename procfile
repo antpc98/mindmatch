@@ -1,1 +1,1 @@
-web: gunicorn brainmatch.wsgi
+web: gunicorn brainmatch_web.wsgi
