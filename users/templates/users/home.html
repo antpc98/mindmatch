@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MiNDMATCH- Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@200..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
@@ -29,198 +30,203 @@
         }
     </style>  
   </head>
-  <body class="bg-[#090022] text-white font-mono">
-    <!-- NAVBAR -->
-    <header class="flex justify-between items-center p-4 border-b border-white/10">
-      <div class="flex items-center gap-3">
-        <h1 class="text-6xl px-10 font-bold font-bebas-neue text-white">MiNDMATCH</h1>
-      </div>
-      <div class="flex gap-3 items-center text-xl p-5">
-        <p>HOME</p>
-        <P>ABOUT</P>  
-        <p>QUESTIONS</p>
-        <a href="{% url 'user_profile' %}" class="rounded-full bg-gradient-to-br from-purple-600 to-pink-500 w-11 h-11 flex items-center justify-center font-bold">C</a>
-      </div>
-    </header>
-
-
-    <!-- BODY -->
-    <main class="grid grid-cols-12 gap-6 p-6">
-      <!-- SIDEBAR -->
-      <div class="col-span-12 lg:col-span-3 bg-[#140347]  p-4 border border-sky-700 flex-wrap shadow-[0_0_9px_1px_rgba(192,132,252,0.6)]">
-        <div>
-          <h2 class="text-lila-400 text-lg mb-3 font-semibold">Inbox</h2>
-          <ul class="text-sm space-y-2 text-gray-300">
-            <li><strong class="text-sky-300">@devangel:</strong> ¿Quieres unirte a mi idea? 💡</li>
-            <li><strong class="text-sky-300">@codequeen:</strong> He comentado en tu idea 🗨️</li>
-          </ul>
+  <body class="bg-[#010012] text-white font-bebas-neue italic">
+      <!-- NAVBAR -->
+      <header class="fixed top-0 w-full z-50 bg-[#010012]/80 backdrop-blur border-b border-purple-700/40 shadow-lg">
+        <div class="flex justify-between items-center px-6 py-4">
+          <h1 class="text-3xl font-bold  text-white">MiNDMATCH</h1>
+          <h3>Blow your mind up with ideas ✨</h3>
+          <nav class="flex gap-6  text-sm">
+            <a href="{% url 'home' %}"href="#" class="hover:text-purple-400 transition">Home</a>
+            <a href="#" class="hover:text-purple-400 transition">About</a>
+            <a href="#" class="hover:text-purple-400 transition">Questions</a>
+          </nav>
+          <a href="{% url 'user_profile_view' user.username%}" class="rounded-full bg-gradient-to-br from-purple-600 to-pink-500 w-10 h-10 flex items-center justify-center font-bold text-white">{{ user.username|slice:":1"|upper }}</a>
         </div>
-        <div class="mt-6">
-          <h2 class="text-lila-400 text-lg mb-3 font-semibold">En progreso...</h2>
-          <p class="text-green-400 text-sm">• Plataforma de reciclaje municipal ♻️</p>
-        </div>
+      </header>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="flex min-h-screen pt-28 lg:pt-16">
+
+    <!-- SIDEBAR IZQUIERDO -->
+    <aside class="hidden lg:flex lg:flex-col  left-0 top-0 h-screen w-15  border-r  border-purple-700 shadow-[0_0_3px_1px_rgba(192,132,252,0.6)] p-5 z-40">
+      <nav class="flex flex-col gap-6 text-lg text-white pt-16 pl-4 ">
+        <a href="{% url 'home' %}" class="hover:text-purple-400 transition text-xl">
+          <i class="fas fa-house"></i>
+        </a>
+        <a href="{% url 'create_idea' %}">
+          <i class="fas fa-pen"></i>
+        </a>
+        <a href="" class="hover:text-purple-400 transition text-xl">
+          <i class="fas fa-envelope"></i>
+        </a>
+        <a href="" class="hover:text-purple-400 transition text-xl">
+          <i class="fas fa-bell"></i>
+        </a>
+        <a href="{% url 'user_profile_view' user.username%}" class="hover:text-purple-400 transition text-xl">
+          <i class="fas fa-user"></i>
+        </a>
+      </nav>
+      <div class="mt-auto">
+        <a href="" class="text-sm text-red-400 hover:text-red-500">🚪 Log out</a>
       </div>
+    </aside>
 
-    
-    <!-- FEED: ideas y proyectos -->
-    <section class="col-span-12 lg:col-span-9 bg-[#0b0129]">
-      <!-- TABS -->
-      <div class="flex gap-4 mb-4 font-bold p-5">
-        <button id="tab-ideas" class="tab-btn font-bold text-purple-300 px-4 py-2 font-bold">💡 Ideas</button>
-        <button id="tab-projects" class="tab-btn text-purple-300 px-4 py-2">⚙️ Proyectos</button>
-        <button id="tab-profiles" class="tab-btn text-purple-300 px-4 py-2">👥 Profiles</button>
-        <div class="flex gap-3 items-center">
-        <form method="GET" action="{% url 'home' %}">
-            <input type="text" name="q" placeholder="Explore..." class="border-purple-300 bg-[#140347] text-white px-2 py-2 font-bold" />
-        </form>
+    <!-- MAIN -->
+    <main class="flex-1 w-full p-6">
+        <!-- Tabs -->
+        <div class="flex gap-4 font-semibold ">
+          <button id="tab-ideas" class="tab-btn text-white border-b-2 border-white">Ideas</button>
+          <button id="tab-projects" class="tab-btn text-neutral-400 hover:text-white">Projects</button>
+          <button id="tab-profiles" class="tab-btn text-neutral-400 hover:text-white">Profiles</button>
         </div>
-        <button onclick="toggleFilter()" class="bg-[#2b0347]  pl-6 pr-6 pb-2 pt-2  border border-purple-700 shadow-[0_0_3px_1px_rgba(192,132,252,0.6)] rounded-2xl">
-           🔍 Filtros
-        </button>
-        <!-- Ventana de filtros (oculta por defecto) -->
-        <div id="filterBox" class="hidden bg-[#1C114A] text-white p-4 rounded shadow-lg w-64">
-          <div>
-      <!-- RIGHT SIDEBAR: filtros -->
-          <aside class="col-span-12 lg:col-span-3 space-y-6 mt-8 lg:mt-0">
-            <div class="bg-[#130D36] p-4 rounded-xl border border-purple-600">
-              <h2 class="text-xl mb-4">🎯 Filtros</h2>
-              <form method="GET" action="">
-                <label class="block text-sm mb-2">Ordenar por:</label>
-                <div class="flex flex-col gap-2 mb-4">
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" name="orden_fecha" class="form-checkbox bg-[#1C114A] text-pink-500 rounded" {% if request.GET.orden_fecha %}checked{% endif %}>
-                    <span class="ml-2 text-sm">Más recientes</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" name="orden_likes" class="form-checkbox bg-[#1C114A] text-pink-500 rounded" {% if request.GET.orden_likes %}checked{% endif %}>
-                    <span class="ml-2 text-sm">Más likes</span>
-                  </label>
-                </div>
-
-                <label class="block text-sm mb-1">Buscar por skills:</label>
-                <input type="text" name="skills" placeholder="Ej: python, spark..." class="w-full bg-[#1C114A] text-white rounded px-2 py-1 mb-4" value="{{ request.GET.skills }}">
-
-                <button type="submit" class="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded w-full">Filtrar</button>
-              </form>
-            </div>
-          </aside>
-          </div>
-        </div>
-      </div>
-
 
       <!-- FEED SCROLL -->
-<div id="feed-container" class="m-5 h-[80vh] overflow-y-auto space-y-4 pr-2">
+      <main id="feed-container" class="h-[75vh] mt-5 lg:mr-72 overflow-y-auto space-y-4 pr-2">
 
-  <!-- Ideas -->
-  <div id="feed-ideas">
-    {% for idea in ideas %}
-      <div class="p-4 m-10 bg-[#000924] border border-purple-700 flex-wrap shadow-[0_0_9px_1px_rgba(192,132,252,0.6)]">
-        <p class=" text-violet-400 italic font-light">> user.{{ idea.author.username }} </p>
-        <a href="{% url 'idea_detail' idea.id %}" class="  text-white-400 px-3 py-1 rounded-full  hover:text-violet-500 text-2xl font-bold">{{ idea.title }}</a>
-        <p class="">{{idea.description}}</p>
-        <p class="text-sky-300 mb-2 mt-2 px-3 py-1 rounded-full ">Status > {{idea.status}} /  Difficulty > {{idea.difficulty}}</p>
-        <p class="mt-2 text-pink-400">❤️ {{ idea.likes.count }} </p>
-        <p class="mt-2 mb-2">{{ idea.comments.count }} comments</p>
-
-         {% for skill in idea.skills_required.all %}
-          <code class="bg-purple-500/80 text-white mb-2 mt-2 px-3 py-1 rounded-full hover:bg-purple-400 transition">{{ skill.name }}</code>
-        {% empty %}
-          <span class="text-green-600 italic">no skills specified</span>
-        {% endfor %}
-        <p class="mt-2 mb-2">{{ idea.created_at}}</p>
-      </div>
-      {% empty  %}
-      <p class="text-pink-400 italic mt-4">😔 No hay ideas que coincidan. ¡Crea una tú!</p>
-      <a href="{% url 'create_idea' %}" class="text-blue-400 underline">Subir nueva idea</a>
-    {% endfor %}
-  </div>
-
-  <!-- Projects -->
-  <div id="feed-projects" class="hidden">
-    {% for project in projects %}
-    <li class="bg-[#130D36] m-4 border border-purple-700 shadow-[0_0_9px_1px_rgba(192,132,252,0.6)] p-4 rounded flex justify-between items-center">
-        <a href="{% url 'project_detail' project.id %}" class="text-purple-400 hover:underline font-semibold">{{ project.title }}</a>
-        <div class="flex gap-2 items-center">
-            <span class="text-sm text-green-400">{{ project.get_availability_display }}</span>
+        <!-- IDEAS -->
+        <div id="feed-ideas">
+          {% for idea in ideas %}
+          <div class="p-4 m-5 bg-[#1E1B3A] border border-purple-700 rounded shadow-[0_0_9px_1px_rgba(192,132,252,0.6)]">
+            <p class="text-violet-400 italic font-light">@{{ idea.author.username }}</p>
+            <a href="{% url 'idea_detail' idea.id %}"
+              class="text-white hover:text-violet-500 text-2xl font-bold block">{{ idea.title }}</a>
+            <p class="mt-2 line-clamp-3">{{ idea.description }}</p>
+            <p class="text-sky-300 mt-2">Status > {{ idea.status }} / Difficulty > {{ idea.difficulty }}</p>
+            <p class="mt-2 text-pink-400">❤️ {{ idea.likes.count }} · {{ idea.comments.count }} comments</p>
+            <div class="mt-2 flex flex-wrap gap-2 line-clamp-3">
+              {% for skill in idea.skills_required.all %}
+              <code class="bg-gradient-to-r from-purple-500 to-pink-500  hover:from-blue-500 hover:to-green-500 text-white px-3 py-1 rounded-full text-sm hover:bg-purple-400 transition">{{ skill.name }}</code>
+              {% empty %}
+              <span class="text-green-600 italic">no skills specified</span>
+              {% endfor %}
+            </div>
+            <p class="mt-2 text-xs text-gray-400">{{ idea.created_at }}</p>
+          </div>
+          {% empty %}
+          <p class="text-pink-400 italic mt-4">😔 No hay ideas que coincidan. ¡Crea una tú!</p>
+          <a href="{% url 'create_idea' %}" class="text-blue-400 underline">Subir nueva idea</a>
+          {% endfor %}
         </div>
-    </li>
-    {% empty %}
-        <li class="text-gray-500">No projects created yet. Create one: <a href="{% url 'create_project' %}" class="text-blue-400 underline">Subir nuevo proyecto</a></li>
-    {% endfor %}
-  </div>
 
-  <!-- Profiles -->
-  <div id="feed-profiles" class="hidden">
-    {% if users %}
-        {% for user in users %}
-        <div class="bg-[#1E1B3A] m-4 p-4 rounded-lg border border-violet-600">
+        <!-- PROYECTOS -->
+        <div id="feed-projects" class="hidden">
+          {% for project in projects %}
+          <div class="bg-[#130D36] p-4 border border-purple-700 rounded shadow mb-2">
+            <a href="{% url 'project_detail' project.id %}"
+              class="text-purple-400 hover:underline font-semibold">{{ project.title }}</a>
+            <span class="text-sm text-green-400 block">{{ project.get_availability_display }}</span>
+          </div>
+          {% empty %}
+          <p class="text-gray-500">No projects created yet.</p>
+          <a href="{% url 'create_project' %}" class="text-blue-400 underline">Subir nuevo proyecto</a>
+          {% endfor %}
+        </div>
+
+        <!-- PERFILES -->
+        <div id="feed-profiles" class="hidden">
+          {% if users %}
+          {% for user in users %}
+          <div class="bg-[#1E1B3A] p-4 rounded border border-violet-600">
             <h3 class="text-xl font-bold text-blue-300">@{{ user.username }}</h3>
             <p class="text-blue-400 text-sm">{{ user.level|default:"No level" }}</p>
             <div class="mt-3 flex flex-wrap gap-2">
-            {% for skill in user.skills.all %}
-                <span class="bg-purple-500/80 text-white px-3 py-1 rounded-full text-sm hover:bg-purple-400 transition">
-                {{ skill.name }}
-                </span>
-            {% empty %}
-                <p class="text-gray-400 text-sm">No skills added yet.</p>
-            {% endfor %}
+              {% for skill in user.skills.all %}
+              <span class="bg-purple-500/80 text-white px-3 py-1 rounded-full text-sm hover:bg-purple-400 transition">{{ skill.name }}</span>
+              {% empty %}
+              <p class="text-gray-400 text-sm">No skills added yet.</p>
+              {% endfor %}
             </div>
-            <a href="{% url 'user_profile' user.username %}" class="text-purple-400 hover:underline text-sm mt-2 inline-block">Ver perfil</a>
+            <a href="{% url 'user_profile_view' user.username %}" class="text-purple-400 hover:underline text-sm mt-2 inline-block">Ver perfil</a>
+          </div>
+          {% endfor %}
+          {% else %}
+          <p class="text-pink-400 italic mt-4">👀 No se encontraron perfiles con ese nombre.</p>
+          {% endif %}
         </div>
-        {% endfor %}
-    {% else %}
-        <p class="text-pink-400 italic mt-4">👀 No se encontraron perfiles con ese nombre.</p>
-    {% endif %}
-    </div>
+      </main>
+    </main>
+      <!-- SIDEBAR DERECHO -->
+        <aside class="hidden lg:flex flex-col fixed right-0 top-0 h-screen w-72 bg-[#0B0D23] border-l border-purple-700 shadow-[0_0_3px_1px_rgba(192,132,252,0.6)] p-5 pt-20 z-40 space-y-6">
+          <!-- Buscador + botón filtros -->
+          <div class="flex items-center gap-4">
+            <form method="GET" action="{% url 'home' %}" class="flex-1">
+              <input type="text" name="q" placeholder="Explore..."
+                class="w-full border border-purple-500 bg-[#140347] text-white px-3 py-2 rounded-md text-sm" />
+            </form>
+            <button onclick="toggleFilter()" class="border border-purple-700 px-3 py-2 rounded-xl text-sm hover:shadow-[0_0_5px_rgba(192,132,252,0.6)] transition">
+              Filters
+            </button>
+          </div>
 
-</div>
+          <!-- Filtro desplegable -->
+          <div id="filterBox" class="hidden bg-[#1C114A] text-white p-4 rounded shadow-lg">
+            <h2 class="text-xl mb-4">🎯 Filtros</h2>
+            <form method="GET" action="">
+              <label class="block text-sm mb-2">Ordenar por:</label>
+              <div class="flex flex-col gap-2 mb-4">
+                <label class="inline-flex items-center">
+                  <input type="checkbox" name="orden_fecha" class="form-checkbox bg-[#1C114A] text-pink-500 rounded" {% if request.GET.orden_fecha %}checked{% endif %}>
+                  <span class="ml-2 text-sm">Más recientes</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="checkbox" name="orden_likes" class="form-checkbox bg-[#1C114A] text-pink-500 rounded" {% if request.GET.orden_likes %}checked{% endif %}>
+                  <span class="ml-2 text-sm">Más likes</span>
+                </label>
+              </div>
 
-</main>
-<!-- JS BÁSICO para tabs -->
- <script>
-  const tabIdeas = document.getElementById('tab-ideas');
-  const tabProjects = document.getElementById('tab-projects');
-  const tabProfiles = document.getElementById('tab-profiles');
+              <label class="block text-sm mb-1">Buscar por skills:</label>
+              <input type="text" name="skills" placeholder="Ej: python, spark..."
+                class="w-full bg-[#1C114A] text-white rounded px-2 py-1 mb-4" value="{{ request.GET.skills }}">
+              <button type="submit" class="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded w-full">
+                Filtrar
+              </button>
+            </form>
+          </div>
+          <!-- PERFILES -->
+        <div id="feed-profiles" >
+          <h1>WHO TO FOLLOW?</h1>
+          {% if users %}
+            {% for user in users|slice:":2" %}
+              <div class="bg-[#1E1B3A] p-4 rounded border border-violet-600 mb-2 flex flex-col">
+                <div class="flex items-center gap-3">
+                  <a href="{% url 'user_profile_view' user.username %}" class="rounded-full bg-gradient-to-br from-purple-600 to-pink-500 w-10 h-10 flex items-center justify-center font-bold text-white">{{ user.username|slice:":1"|upper }}</a>
+                  <h3 class="text-md font-bold text-blue-300">@{{ user.username }}</h3>
+                  <form method="post" action="{% url 'follow_user' user.username %}">
+                  {% csrf_token %}
+                  <button class="border border-purple-700 px-3 py-2 rounded-xl text-sm hover:shadow-[0_0_5px_rgba(192,132,252,0.6)] transition">follow</button>
+                </form>
+                </div>
+                <p class="text-blue-400 text-sm mt-1">{{ user.level|default:"No level" }}</p>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+        <h1>TOP PROJECTS</h1>
+        </aside>
+  </div>
 
-  const feedIdeas = document.getElementById('feed-ideas');
-  const feedProjects = document.getElementById('feed-projects');
-  const feedProfiles = document.getElementById('feed-profiles');
+  <!-- SCRIPTS para tabs -->
+  <script>
+    const tabs = ["ideas", "projects", "profiles"];
+    tabs.forEach(tab => {
+      document.getElementById("tab-" + tab).addEventListener("click", () => {
+        tabs.forEach(t => {
+          document.getElementById("feed-" + t).classList.add("hidden");
+          document.getElementById("tab-" + t).classList.remove("border-b-2", "border-white", "text-white");
+          document.getElementById("tab-" + t).classList.add("text-neutral-400");
+        });
+        document.getElementById("feed-" + tab).classList.remove("hidden");
+        document.getElementById("tab-" + tab).classList.add("border-b-2", "border-white", "text-white");
+      });
+    });
 
-  function setActiveTab(active, others) {
-    active.classList.add('border-b-2', 'border-purple-700', 'shadow-[0_0_5px_1px_rgba(192,132,252,0.6)]', 'bg-[#140347]');
-    others.forEach(tab => tab.classList.remove('border-b-2', 'border-purple-700', 'bg-[#140347]', 'shadow-[0_0_5px_1px_rgba(192,132,252,0.6)]'));
-  }
+    function toggleFilter() {
+      document.getElementById("filterBox").classList.toggle("hidden");
+    }
+  </script>
+</body>
 
-  function showFeed(active, others) {
-    active.classList.remove('hidden');
-    others.forEach(feed => feed.classList.add('hidden'));
-  }
-
-  tabIdeas.addEventListener('click', () => {
-    setActiveTab(tabIdeas, [tabProjects, tabProfiles]);
-    showFeed(feedIdeas, [feedProjects, feedProfiles]);
-  });
-
-  tabProjects.addEventListener('click', () => {
-    setActiveTab(tabProjects, [tabIdeas, tabProfiles]);
-    showFeed(feedProjects, [feedIdeas, feedProfiles]);
-  });
-
-  tabProfiles.addEventListener('click', () => {
-    setActiveTab(tabProfiles, [tabIdeas, tabProjects]);
-    showFeed(feedProfiles, [feedIdeas, feedProjects]);
-  });
-</script>
-<script>
-  function toggleFilter() {
-    const box = document.getElementById('filterBox');
-    box.classList.toggle('hidden');
-  }
-</script>
-
-
-  </body>
 </html>
 
 

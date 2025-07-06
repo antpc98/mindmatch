@@ -60,7 +60,7 @@ def user_settings(request):
                     user.skills.add(skill_obj)
 
             user.save()
-            return redirect('user_profile')
+            return redirect('user_profile', username=request.user.username)
     else:
         # Este bloque se ejecuta en GET
         form = CustomUserChangeForm(instance=request.user)
@@ -126,7 +126,6 @@ def home(request):
 def user_profile_view(request, username):
     user = get_object_or_404(User, username=username)
     projects = Project.objects.filter(author=user)
-    print(projects)
     return render(request, 'users/profile.html', {'user': user, 'projects': projects})
 
 @login_required
@@ -141,14 +140,14 @@ def follow_user(request, username):
     target_user = get_object_or_404(User, username=username)
     if target_user != request.user:
         request.user.friends.add(target_user)
-    return redirect('user_profile', username=username)
+    return redirect('user_profile_view', username=username)
 
 @login_required
 def unfollow_user(request, username):
     target_user = get_object_or_404(User, username=username)
     if target_user != request.user:
         request.user.friends.remove(target_user)
-    return redirect('user_profile', username=username)
+    return redirect('user_profile_view', username=username)
 
 @login_required
 def user_friends(request, username):

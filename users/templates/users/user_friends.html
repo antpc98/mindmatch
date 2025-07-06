@@ -24,7 +24,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {% for friend in friends %}
-        <a href="{% url 'user_profile' friend.username %}"
+        <a href="{% url 'user_profile_view' friend.username %}"
           class="bg-[#1E1B3A] border border-purple-700 p-4 rounded-lg hover:shadow-lg transition duration-200 group">
           <h2 class="text-xl font-semibold text-blue-400 group-hover:underline">@{{ friend.username }}</h2>
           <p class="text-sm text-gray-400 mt-1">{{ friend.bio|default:"Sin biografía" }}</p>
